@@ -100,7 +100,7 @@ const Hero = ({ onOpenVideo }) => {
           className="w-full h-full object-cover brightness-[0.7] contrast-[1.1]"
         >
           <source 
-            src="https://player.vimeo.com/external/494252666.sd.mp4?s=72fa13e9280d5b12851845d475cf47e09210c41b&profile_id=165&oauth2_token_id=57447761" 
+            src="https://videos.pexels.com/video-files/3762466/3762466-sd_640_360_25fps.mp4" 
             type="video/mp4" 
           />
         </video>
