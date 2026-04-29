@@ -1,0 +1,686 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import { motion, useScroll, useSpring, AnimatePresence } from 'motion/react';
+import { 
+  ShoppingBag, 
+  Search, 
+  CheckCircle2, 
+  Star, 
+  ChevronRight, 
+  Instagram, 
+  Facebook, 
+  ArrowRight,
+  Menu,
+  X
+} from 'lucide-react';
+import { useState, useEffect } from 'react';
+
+// --- Components ---
+
+const Navbar = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  return (
+    <nav className={`fixed top-0 w-full z-50 transition-all duration-300 border-b ${isScrolled ? 'bg-white/95 backdrop-blur-md border-brand-mocha/10 shadow-sm py-3' : 'bg-transparent border-transparent py-6'}`}>
+      <div className="max-w-7xl mx-auto px-6 flex justify-between items-center text-brand-mocha">
+        <div className="flex items-center gap-8">
+          <button className="md:hidden" onClick={() => setMobileMenuOpen(true)}>
+            <Menu className="w-6 h-6" />
+          </button>
+          <div className="hidden md:flex gap-8 text-[11px] uppercase tracking-[0.15em] font-bold">
+            <a href="#" className="hover:text-brand-rose transition-colors">Home</a>
+            <a href="#" className="hover:text-brand-rose transition-colors">Shop</a>
+            <a href="#" className="hover:text-brand-rose transition-colors">About</a>
+          </div>
+        </div>
+
+        <a href="/" className="text-xl md:text-2xl font-serif font-bold tracking-wider hover:opacity-80 transition-opacity">
+          SKINRISE COLLECTIVE
+        </a>
+
+        <div className="flex items-center gap-6">
+          <div className="hidden md:flex gap-6 uppercase text-[11px] font-bold tracking-[0.15em]">
+             <a href="#" className="hover:text-brand-rose transition-colors">Contact</a>
+          </div>
+          <button className="hover:text-brand-rose transition-colors">
+            <Search className="w-5 h-5" />
+          </button>
+          <button className="relative hover:text-brand-rose transition-colors text-[11px] font-bold uppercase tracking-widest flex items-center gap-2">
+            <ShoppingBag className="w-5 h-5" />
+            <span className="hidden lg:inline text-brand-mocha/40 text-[9px]">(0)</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <motion.div 
+          initial={{ opacity: 0, x: '-100%' }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: '-100%' }}
+          className="fixed inset-0 bg-white z-[60] flex flex-col p-8"
+        >
+          <div className="flex justify-between items-center mb-12">
+            <span className="font-serif text-xl">Skinrise Collective</span>
+            <button onClick={() => setMobileMenuOpen(false)}><X className="w-6 h-6" /></button>
+          </div>
+          <div className="flex flex-col gap-8 text-2xl font-serif italic">
+            <a href="#" onClick={() => setMobileMenuOpen(false)}>Home</a>
+            <a href="#" onClick={() => setMobileMenuOpen(false)}>Shop Shop</a>
+            <a href="#" onClick={() => setMobileMenuOpen(false)}>Our Story</a>
+            <a href="#" onClick={() => setMobileMenuOpen(false)}>Skin Blog</a>
+            <a href="#" onClick={() => setMobileMenuOpen(false)}>Contact Us</a>
+          </div>
+        </motion.div>
+      )}
+    </nav>
+  );
+};
+
+const Hero = ({ onOpenVideo }) => {
+  return (
+    <section className="relative h-screen w-full flex items-center justify-center overflow-hidden">
+      {/* Video Background */}
+      <div className="absolute inset-0 z-0">
+        <video 
+          autoPlay 
+          loop 
+          muted 
+          playsInline
+          className="w-full h-full object-cover brightness-[0.7] contrast-[1.1]"
+        >
+          <source 
+            src="https://player.vimeo.com/external/494252666.sd.mp4?s=72fa13e9280d5b12851845d475cf47e09210c41b&profile_id=165&oauth2_token_id=57447761" 
+            type="video/mp4" 
+          />
+        </video>
+        <div className="absolute inset-0 bg-brand-mocha/30 mix-blend-multiply" />
+      </div>
+
+      <div className="relative z-10 text-center px-6 max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-12 items-center">
+        <div className="text-left">
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            className="flex items-center gap-2 text-brand-sage text-[11px] font-bold uppercase tracking-[0.2em] mb-6"
+          >
+            <CheckCircle2 className="w-4 h-4" /> Dermatologist Recommended
+          </motion.div>
+          <motion.h1 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-5xl md:text-6xl lg:text-7xl text-white font-serif mb-8 leading-[1.05] font-light"
+          >
+            Finally. Skincare That Actually Works For Acne-Prone Skin
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="text-white/80 text-base md:text-lg font-light mb-10 max-w-lg leading-relaxed"
+          >
+            Gentle, effective formulas designed to clear, calm and protect your skin — without harsh ingredients or broken promises.
+          </motion.p>
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            className="flex flex-col sm:flex-row gap-4"
+          >
+            <button className="bg-brand-mocha text-white px-10 py-5 font-bold tracking-[0.2em] uppercase text-[11px] rounded-[2px] hover:bg-brand-rose transition-all transform hover:-translate-y-0.5">
+              Shop The Routine
+            </button>
+            <button className="border border-white text-white px-10 py-5 font-bold tracking-[0.2em] uppercase text-[11px] rounded-[2px] backdrop-blur-sm hover:bg-white hover:text-brand-mocha transition-all transform hover:-translate-y-0.5">
+              Take Skin Quiz
+            </button>
+          </motion.div>
+        </div>
+        <div className="hidden lg:flex items-center justify-center relative">
+           <motion.div 
+             initial={{ opacity: 0, scale: 0.9 }}
+             animate={{ opacity: 1, scale: 1 }}
+             onClick={onOpenVideo}
+             transition={{ duration: 1 }}
+             className="w-full aspect-square bg-gradient-to-br from-brand-rose/20 to-brand-sage/20 border border-white/10 backdrop-blur-3xl flex items-center justify-center group cursor-pointer"
+           >
+              <div className="w-20 h-20 bg-white/20 backdrop-blur-md rounded-full border border-white/50 flex items-center justify-center group-hover:scale-110 transition-transform">
+                 <div className="w-0 h-0 border-t-[10px] border-t-transparent border-b-[10px] border-b-transparent border-l-[15px] border-l-white ml-2" />
+              </div>
+              <div className="absolute bottom-6 left-6 text-white text-[10px] font-bold uppercase tracking-widest text-left">
+                 Real Results Story:<br/><span className="text-white/60">Sarah's 4-Week Journey</span>
+              </div>
+           </motion.div>
+        </div>
+      </div>
+
+      {/* Scroll indicator */}
+      <motion.div 
+        animate={{ y: [0, 10, 0] }}
+        transition={{ duration: 2, repeat: Infinity }}
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 text-white flex flex-col items-center gap-2"
+      >
+        <span className="text-[10px] uppercase tracking-widest opacity-60">Scroll</span>
+        <div className="w-[1px] h-12 bg-white/30 relative overflow-hidden">
+           <motion.div 
+              animate={{ y: [0, 48] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+              className="absolute top-0 left-0 w-full h-1/2 bg-white"
+           />
+        </div>
+      </motion.div>
+    </section>
+  );
+};
+
+const TrustBar = () => {
+  const trusts = [
+    { label: "Non-Comedogenic", icon: "✓" },
+    { label: "Cruelty Free", icon: "✓" },
+    { label: "Clean Formulas", icon: "✓" },
+    { label: "Free Shipping Over $50", icon: "✓" },
+  ];
+
+  return (
+    <section className="bg-brand-cream h-[60px] flex items-center border-b border-brand-mocha/5">
+      <div className="max-w-7xl mx-auto px-6 w-full flex justify-around">
+        {trusts.map((item, idx) => (
+          <div key={idx} className="flex items-center gap-2 text-[11px] font-bold tracking-[0.1em] text-brand-mocha/70 uppercase">
+             <span className="text-brand-sage">✓</span> {item.label}
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+};
+
+interface ProductCardProps {
+  key?: any;
+  name: string;
+  price: string;
+  description: string;
+  image: string;
+  tag?: string;
+  rating: number;
+}
+
+const ProductCard = ({ name, price, description, image, tag, rating }: ProductCardProps) => {
+  return (
+    <motion.div 
+      whileHover={{ y: -5 }}
+      className="group bg-white p-[15px] shadow-sleek rounded-[4px] border border-brand-cream/50"
+    >
+      <div className="relative aspect-square bg-[#F2F2F2] overflow-hidden mb-5">
+        <img 
+          src={image} 
+          alt={name} 
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" 
+        />
+        {tag && (
+          <span className={`absolute top-[10px] left-[10px] text-white text-[8px] uppercase tracking-[0.1em] px-2 py-1 font-bold ${tag.includes('left') ? 'bg-brand-mocha' : 'bg-brand-rose'}`}>
+            {tag}
+          </span>
+        )}
+      </div>
+      <div className="space-y-1">
+        <div className="flex items-center gap-1 mb-1">
+          {[...Array(5)].map((_, i) => (
+            <Star key={i} className="w-3 h-3 fill-[#f59e0b] text-[#f59e0b]" />
+          ))}
+          <span className="text-[10px] font-bold text-brand-mocha/30 ml-1 uppercase">(128)</span>
+        </div>
+        <h3 className="font-serif text-lg leading-tight">{name}</h3>
+        <p className="text-[12px] opacity-70 leading-relaxed max-w-[90%]">{description}</p>
+        <div className="flex justify-between items-center pt-3 mt-1">
+           <span className="font-bold text-base tracking-tight">{price}</span>
+           <button className="bg-brand-sage text-white px-4 py-2 text-[10px] font-bold uppercase rounded-[2px] hover:bg-brand-mocha transition-colors">
+              Add To Cart
+           </button>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+const FeaturedProducts = () => {
+  const products = [
+    {
+      name: "Clarity Cleanser",
+      price: "$28.00",
+      description: "Deeply cleanses without stripping moisture.",
+      image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=600&auto=format&fit=crop",
+      tag: "Only 12 left!",
+      rating: 4.8
+    },
+    {
+      name: "Calm + Clear Serum",
+      price: "$42.00",
+      description: "Soothes redness and targets active breakouts.",
+      image: "https://images.unsplash.com/photo-1611080626919-7cf5a9dcab5b?q=80&w=600&auto=format&fit=crop",
+      rating: 4.9
+    },
+    {
+      name: "Daily SPF Moisturiser",
+      price: "$35.00",
+      description: "Broad spectrum protection for sensitive skin.",
+      image: "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?q=80&w=600&auto=format&fit=crop",
+      rating: 4.7
+    }
+  ];
+
+  return (
+    <section className="py-24 bg-brand-cream">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl text-brand-mocha font-serif">Our Best Sellers</h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 xl:gap-12">
+          {products.map((p, i) => (
+            <ProductCard 
+              key={i} 
+              name={p.name}
+              price={p.price}
+              description={p.description}
+              image={p.image}
+              tag={p.tag}
+              rating={p.rating}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const HowItWorks = () => {
+  const steps = [
+    { title: "Cleanse", desc: "Remove dirt, oil & impurities gently without stripping natural oils.", idx: "01" },
+    { title: "Treat", desc: "Target breakouts with active, dermatologically-proven ingredients.", idx: "02" },
+    { title: "Protect", desc: "Lock in moisture & shield from environmental damage daily.", idx: "03" }
+  ];
+
+  return (
+    <section className="py-24 bg-brand-cream relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
+        <div className="text-center mb-20">
+          <h2 className="text-4xl md:text-6xl mb-6">Simple Routine. Real Results.</h2>
+          <p className="text-brand-mocha/60 max-w-xl mx-auto">Skin care shouldn't be complicated. We focus on the essentials that actually transform your skin.</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
+          {steps.map((step, i) => (
+            <div key={i} className="text-center group">
+              <div className="mb-8 relative inline-block">
+                <span className="font-serif text-8xl text-brand-rose/20 select-none">{step.idx}</span>
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                   <CheckCircle2 className="w-6 h-6 text-brand-mocha" />
+                </div>
+              </div>
+              <h3 className="text-2xl mb-4 font-serif">{step.title}</h3>
+              <p className="text-brand-mocha/70 text-sm leading-relaxed px-4">{step.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const Results = () => {
+  const testimonials = [
+    {
+       name: "Sarah J.",
+       text: "I've tried everything for my adult cystic acne. After 4 weeks of the Clarity bundle, my skin has never looked more calm.",
+       rating: 5
+    },
+    {
+       name: "Elena M.",
+       text: "Finally a brand that respects my skin barrier while fighting breakouts. The SPF moisturizer is my holy grail.",
+       rating: 5
+    },
+    {
+       name: "Maya W.",
+       text: "The Calm + Clear serum reduced my redness overnight. It's gentle but insanely effective. 10/10 recommendation.",
+       rating: 5
+    }
+  ];
+
+  return (
+    <section className="py-24 bg-white">
+      <div className="max-w-7xl mx-auto px-6">
+        <h2 className="text-center text-4xl md:text-5xl lg:text-6xl mb-20">Real Results From Real People</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {testimonials.map((t, i) => (
+            <motion.div 
+              key={i}
+              whileHover={{ scale: 1.02 }}
+              className="p-10 border border-brand-cream bg-white relative"
+            >
+              <div className="flex gap-1 mb-6">
+                {[...Array(5)].map((_, idx) => (
+                  <Star key={idx} className="w-4 h-4 fill-brand-rose text-brand-rose" />
+                ))}
+              </div>
+              <p className="text-brand-mocha font-serif text-lg italic mb-8 leading-relaxed">"{t.text}"</p>
+              <div className="flex items-center gap-3">
+                 <div className="w-8 h-8 rounded-full bg-brand-sage flex items-center justify-center text-white text-[10px] font-bold">
+                    {t.name[0]}
+                 </div>
+                 <div>
+                    <p className="text-xs font-bold uppercase tracking-widest">{t.name}</p>
+                    <div className="flex items-center gap-1 text-brand-sage text-[10px] font-bold uppercase tracking-tight">
+                       <CheckCircle2 className="w-3 h-3" />
+                       Verified Buyer
+                    </div>
+                 </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const About = () => {
+  return (
+    <section className="py-24 bg-brand-cream">
+       <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center gap-16 lg:gap-24">
+          <div className="w-full md:w-1/2 aspect-[4/5] relative">
+             <img 
+               src="https://images.unsplash.com/photo-1596462502278-27bfdc4033c8?q=80&w=800&auto=format&fit=crop" 
+               alt="Skinrise Founder" 
+               className="w-full h-full object-cover"
+             />
+             <div className="absolute -bottom-8 -right-8 w-48 h-48 bg-brand-sage flex items-center justify-center p-8 text-white hidden lg:flex">
+                <p className="font-serif italic text-xl text-center">Built for those who feel overseen by the industry.</p>
+             </div>
+          </div>
+          <div className="w-full md:w-1/2 space-y-8">
+             <span className="text-brand-rose uppercase tracking-[0.2em] text-xs font-bold block">Our Story</span>
+             <h2 className="text-4xl md:text-5xl lg:text-7xl leading-[1.1]">Born From Frustration.<br/>Built With Purpose.</h2>
+             <div className="space-y-6 text-brand-mocha/70 leading-relaxed text-lg italic">
+                <p>We spent years searching for products that didn't treat acne-prone skin like a problem to be aggressively scrubbed away.</p>
+                <p>Skinrise Collective was founded on the belief that clear skin shouldn't come at the cost of a damaged barrier. We formulated everything in-house with leading dermatologists to ensure efficacy without irritation.</p>
+                <p>Our goal is simple: to help you fall in love with your reflection again, one gentle step at a time.</p>
+             </div>
+             <button className="inline-flex items-center gap-3 border-b-2 border-brand-mocha pb-1 font-bold text-sm uppercase tracking-widest hover:text-brand-rose hover:border-brand-rose transition-colors">
+                Our Full Manifesto <ArrowRight className="w-4 h-4" />
+             </button>
+          </div>
+       </div>
+    </section>
+  );
+};
+
+const InstagramStrip = () => {
+  const images = [
+     "https://images.unsplash.com/photo-1612817288484-6f916006741a?q=80&w=300&auto=format&fit=crop",
+     "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=300&auto=format&fit=crop",
+     "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?q=80&w=300&auto=format&fit=crop",
+     "https://images.unsplash.com/photo-1594125355938-1ee46067852c?q=80&w=300&auto=format&fit=crop",
+     "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=300&auto=format&fit=crop",
+     "https://images.unsplash.com/photo-1552332386-f8dd00dc2f85?q=80&w=300&auto=format&fit=crop"
+  ];
+
+  return (
+    <section className="bg-white">
+       <div className="py-24 text-center">
+          <h2 className="text-3xl md:text-5xl mb-4">Community Focused</h2>
+          <p className="text-brand-rose font-medium tracking-[0.2em] uppercase text-sm mb-12 flex justify-center items-center gap-2">
+            @skinrisecollective <span className="w-8 h-[1px] bg-brand-rose" />
+          </p>
+          <div className="flex flex-wrap md:flex-nowrap">
+             {images.map((img, i) => (
+                <div key={i} className="w-1/2 md:w-1/6 aspect-square overflow-hidden group cursor-pointer border-r border-b border-brand-cream/10">
+                   <img src={img} alt="Skin" className="w-full h-full object-cover group-hover:scale-110 group-hover:rotate-3 transition-transform duration-700" />
+                   <div className="absolute inset-0 bg-brand-mocha/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <Instagram className="text-white w-6 h-6" />
+                   </div>
+                </div>
+             ))}
+          </div>
+          <button className="mt-16 bg-brand-mocha text-white px-10 py-4 uppercase text-xs tracking-[0.2em] font-bold hover:bg-brand-rose transition-colors">
+            Follow Our Journey
+          </button>
+       </div>
+    </section>
+  );
+};
+
+const Signup = () => {
+  return (
+    <section className="px-6 pb-24">
+       <div className="max-w-7xl mx-auto bg-brand-rose h-[150px] md:h-[120px] flex flex-col md:flex-row items-center justify-between px-12 text-white overflow-hidden">
+          <div className="text-center md:text-left space-y-1 py-6 md:py-0">
+             <h3 className="text-2xl font-serif">Get 15% Off Your First Order</h3>
+             <p className="text-xs opacity-90 max-w-sm">Join thousands of women on their journey to clearer, healthier skin.</p>
+          </div>
+          <form className="flex gap-2 w-full md:w-auto pb-6 md:pb-0" onSubmit={(e) => e.preventDefault()}>
+             <input 
+               type="email" 
+               placeholder="Enter your email address" 
+               className="flex-1 md:w-[250px] bg-white text-brand-mocha px-6 py-3 text-xs focus:outline-none rounded-[2px]"
+             />
+             <button className="bg-brand-mocha text-white px-8 py-3 uppercase font-bold tracking-widest text-[11px] hover:bg-brand-sage transition-all rounded-[2px]">
+               Subscribe
+             </button>
+          </form>
+       </div>
+    </section>
+  );
+};
+
+const Footer = () => {
+  return (
+    <footer className="bg-white border-t border-brand-cream pt-24 pb-12">
+       <div className="max-w-7xl mx-auto px-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-16 mb-20">
+             <div className="space-y-6">
+                <h2 className="text-2xl font-serif font-bold">Skinrise Collective</h2>
+                <p className="text-brand-mocha/60 text-sm leading-relaxed max-w-[240px]">Redefining confidence through gentle, science-backed acne care. Made for you, with you.</p>
+                <div className="flex gap-6 items-center">
+                   <a href="#" className="hover:text-brand-rose transition-colors"><Instagram className="w-5 h-5" /></a>
+                   <a href="#" className="hover:text-brand-rose transition-colors"><Facebook className="w-5 h-5" /></a>
+                   <a href="#" className="hover:text-brand-rose transition-colors font-bold text-sm tracking-tighter italic font-serif">TikTok</a>
+                </div>
+             </div>
+             
+             <div>
+                <h4 className="font-bold uppercase text-[10px] tracking-[0.3em] mb-8 opacity-40">Store</h4>
+                <ul className="space-y-4 text-sm font-medium">
+                   <li><a href="#" className="hover:text-brand-rose transition-colors">Shop All</a></li>
+                   <li><a href="#" className="hover:text-brand-rose transition-colors">Bundles</a></li>
+                   <li><a href="#" className="hover:text-brand-rose transition-colors">Best Sellers</a></li>
+                   <li><a href="#" className="hover:text-brand-rose transition-colors">New Arrivals</a></li>
+                </ul>
+             </div>
+
+             <div>
+                <h4 className="font-bold uppercase text-[10px] tracking-[0.3em] mb-8 opacity-40">Support</h4>
+                <ul className="space-y-4 text-sm font-medium">
+                   <li><a href="#" className="hover:text-brand-rose transition-colors">Help Center</a></li>
+                   <li><a href="#" className="hover:text-brand-rose transition-colors">Shipping</a></li>
+                   <li><a href="#" className="hover:text-brand-rose transition-colors">Returns</a></li>
+                   <li><a href="#" className="hover:text-brand-rose transition-colors">Skin Concierge</a></li>
+                </ul>
+             </div>
+
+             <div>
+                <h4 className="font-bold uppercase text-[10px] tracking-[0.3em] mb-8 opacity-40">Location</h4>
+                <p className="text-sm italic font-serif opacity-60 leading-relaxed max-w-[200px]">
+                  Unit 42, The Creative Quarter<br/>
+                  New York, NY 10013<br/>
+                  hello@skinrisecollective.com
+                </p>
+             </div>
+          </div>
+          <div className="border-t border-brand-cream pt-12 text-center text-[10px] uppercase font-bold tracking-[0.2em] text-brand-mocha/30">
+            © 2026 Skinrise Collective. All Rights Reserved. Built with ritual and care.
+          </div>
+       </div>
+    </footer>
+  );
+};
+
+const VideoModal = ({ isOpen, onClose, videoSrc }) => {
+  if (!isOpen) return null;
+  return (
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-brand-mocha/95 p-6"
+      onClick={onClose}
+    >
+      <motion.div 
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        className="relative w-full max-w-5xl aspect-video bg-black shadow-2xl overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button 
+          onClick={onClose}
+          className="absolute top-4 right-4 text-white hover:text-brand-rose z-10 transition-colors"
+        >
+          <X className="w-8 h-8" />
+        </button>
+        <iframe 
+          className="w-full h-full"
+          src={`${videoSrc}?autoplay=1&muted=0`}
+          title="Video Player"
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        ></iframe>
+      </motion.div>
+    </motion.div>
+  );
+};
+
+const ProductDemo = () => {
+  return (
+    <section className="py-24 bg-white overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="space-y-8">
+            <span className="text-brand-rose uppercase tracking-[0.2em] text-xs font-bold block">The Skin Ritual</span>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl leading-tight">See The Results<br/>In Action</h2>
+            <p className="text-brand-mocha/70 text-lg leading-relaxed font-light">
+              We believe in transparency. Watch how our Clarity Ritual transforms tired, congested skin into a glowing, calm complexion in real-time.
+            </p>
+            <div className="flex flex-col gap-6">
+              <div className="flex gap-4 items-start">
+                <div className="w-6 h-6 rounded-full bg-brand-sage text-white flex items-center justify-center flex-shrink-0 text-[10px] font-bold mt-1">1</div>
+                <div>
+                   <h4 className="font-bold text-sm uppercase tracking-widest mb-1">Gentle Extraction</h4>
+                   <p className="text-sm opacity-60">Dissolves stubborn debris without irritation.</p>
+                </div>
+              </div>
+              <div className="flex gap-4 items-start">
+                <div className="w-6 h-6 rounded-full bg-brand-sage text-white flex items-center justify-center flex-shrink-0 text-[10px] font-bold mt-1">2</div>
+                <div>
+                   <h4 className="font-bold text-sm uppercase tracking-widest mb-1">Cellular Repair</h4>
+                   <p className="text-sm opacity-60">Peptides work at the source to calm inflammation.</p>
+                </div>
+              </div>
+            </div>
+            <button className="bg-brand-mocha text-white px-10 py-5 font-bold tracking-[0.2em] uppercase text-[11px] rounded-[2px] transition-all hover:bg-brand-rose">
+              View Scientific Data
+            </button>
+          </div>
+          <div className="relative aspect-square md:aspect-video lg:aspect-square bg-brand-cream overflow-hidden shadow-2xl rounded-sm">
+             <video 
+               autoPlay 
+               loop 
+               muted 
+               playsInline
+               className="w-full h-full object-cover grayscale brightness-110 contrast-125"
+             >
+               <source 
+                 src="https://player.vimeo.com/external/393717144.sd.mp4?s=d0728cceb80456c6dbf6f1c4df191833c690f055&profile_id=165&oauth2_token_id=57447761" 
+                 type="video/mp4" 
+               />
+             </video>
+             <div className="absolute inset-0 bg-brand-rose/10 mix-blend-overlay" />
+             <div className="absolute bottom-10 left-10 text-white">
+                <p className="text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Live Demo</p>
+                <h3 className="text-3xl font-serif">4 Minute Ritual</h3>
+             </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default function App() {
+  const { scrollYProgress } = useScroll();
+  const [videoModal, setVideoModal] = useState({ open: false, src: '' });
+  
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
+
+  return (
+    <div className="relative selection:bg-brand-rose selection:text-white">
+      {/* Scroll progress bar */}
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-[2px] bg-brand-rose z-[70] origin-left"
+        style={{ scaleX }}
+      />
+
+      <Navbar />
+      
+      <main>
+        <Hero onOpenVideo={() => setVideoModal({ open: true, src: 'https://www.youtube.com/embed/dQw4w9WgXcQ' })} />
+        <TrustBar />
+        <FeaturedProducts />
+        <HowItWorks />
+        <ProductDemo />
+        <Results />
+        <About />
+        <InstagramStrip />
+        <Signup />
+      </main>
+
+      <Footer />
+
+      <AnimatePresence>
+        {videoModal.open && (
+          <VideoModal 
+            isOpen={videoModal.open} 
+            videoSrc={videoModal.src} 
+            onClose={() => setVideoModal({ ...videoModal, open: false })} 
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Mobile Sticky CTA */}
+      <div className="md:hidden fixed bottom-6 left-6 right-6 z-40">
+         <button className="w-full bg-brand-mocha text-white py-5 shadow-2xl uppercase text-[11px] tracking-[0.2em] font-bold rounded-[100px]">
+            Shop Now →
+         </button>
+      </div>
+
+      {/* Chat Bubble */}
+      <button className="fixed bottom-24 right-6 md:bottom-10 md:right-10 bg-white border border-brand-cream p-4 rounded-full shadow-lg z-40 hover:bg-brand-cream transition-colors group">
+         <span className="absolute right-full mr-4 top-1/2 -translate-y-1/2 bg-brand-mocha text-white text-[10px] font-bold uppercase tracking-widest py-2 px-4 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">Skin Concierge</span>
+         <ChevronRight className="w-5 h-5 text-brand-mocha rotate-[-45deg]" />
+      </button>
+    </div>
+  );
+}
+
