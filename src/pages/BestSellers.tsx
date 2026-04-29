@@ -1,33 +1,9 @@
 import { motion } from 'motion/react';
 import { ProductCard } from '../App';
+import { PRODUCTS } from '../data/products';
 
 const BestSellers = () => {
-  const products = [
-    {
-      name: "Clarity Cleanser",
-      price: "$28.00",
-      description: "Deeply cleanses without stripping moisture while targeting acne-causing bacteria.",
-      image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=600&auto=format&fit=crop",
-      tag: "Best Seller",
-      rating: 4.8
-    },
-    {
-      name: "Calm + Clear Serum",
-      price: "$42.00",
-      description: "High-potency serum that targets redness and post-acne marks.",
-      image: "https://images.unsplash.com/photo-1611080626919-7cf5a9dcab5b?q=80&w=600&auto=format&fit=crop",
-      tag: "Best Seller",
-      rating: 4.9
-    },
-    {
-       name: "Barrier Balm",
-       price: "$38.00",
-       description: "Intensive repair cream for compromised skin barriers.",
-       image: "https://images.unsplash.com/photo-1601049541289-9b1b7abe71a0?q=80&w=600&auto=format&fit=crop",
-       tag: "Best Seller",
-       rating: 5.0
-    }
-  ];
+  const products = PRODUCTS.filter(p => p.tag === 'Best Seller');
 
   return (
     <div className="pt-40 md:pt-48 pb-24 bg-brand-cream min-h-screen">

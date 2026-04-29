@@ -45,9 +45,9 @@ const Bundles = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
-              className="group"
+              className="group bg-white p-6 shadow-sm rounded-sm"
             >
-              <div className="relative aspect-[4/5] overflow-hidden bg-white mb-6">
+              <div className="relative aspect-[4/5] overflow-hidden bg-brand-cream mb-6">
                 <img src={bundle.image} alt={bundle.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                 <div className="absolute top-4 left-4 bg-brand-rose text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1">Save</div>
               </div>
@@ -57,7 +57,7 @@ const Bundles = () => {
                 <span className="text-lg font-bold">{bundle.price}</span>
                 <span className="text-sm line-through opacity-30">{bundle.originalPrice}</span>
               </div>
-              <button className="w-full bg-brand-mocha text-white py-4 text-[11px] font-bold uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-brand-rose transition-colors">
+              <button className="w-full bg-brand-mocha text-white py-5 text-[11px] font-bold uppercase tracking-[0.2em] flex items-center justify-center gap-2 hover:bg-brand-rose transition-colors">
                 <ShoppingBag className="w-4 h-4" /> Add Set To Bag
               </button>
             </motion.div>

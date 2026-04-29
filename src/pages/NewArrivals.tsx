@@ -1,25 +1,9 @@
 import { motion } from 'motion/react';
 import { ProductCard } from '../App';
+import { PRODUCTS } from '../data/products';
 
 const NewArrivals = () => {
-  const products = [
-    {
-      name: "Botanical Face Oil",
-      price: "$45.00",
-      description: "A blend of 12 organic oils to restore your outer glow and calm inflammation.",
-      image: "https://images.unsplash.com/photo-1608248597279-f99d160bfcbc?q=80&w=600&auto=format&fit=crop",
-      tag: "New Arrival",
-      rating: 4.9
-    },
-    {
-      name: "Daily SPF Moisturiser",
-      price: "$35.00",
-      description: "Broad spectrum protection for sensitive skin that doesn't clog pores.",
-      image: "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?q=80&w=600&auto=format&fit=crop",
-      tag: "New Arrival",
-      rating: 4.7
-    }
-  ];
+  const products = PRODUCTS.filter(p => p.tag === 'New Arrival');
 
   return (
     <div className="pt-40 md:pt-48 pb-24 bg-brand-cream min-h-screen">

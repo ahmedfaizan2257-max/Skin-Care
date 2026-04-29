@@ -33,7 +33,7 @@ const SkinConcierge = () => {
               ))}
             </div>
 
-            <button className="bg-brand-rose text-white px-12 py-5 font-bold uppercase text-[11px] tracking-widest rounded-[2px] transition-all transform hover:scale-105">
+            <button className="w-full sm:w-auto bg-brand-rose text-white px-12 py-5 font-bold uppercase text-[11px] tracking-widest rounded-[2px] transition-all transform hover:scale-105">
               Book Your Appointment Now
             </button>
           </div>

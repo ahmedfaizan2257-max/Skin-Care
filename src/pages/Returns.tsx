@@ -7,7 +7,7 @@ const Returns = () => {
           <h1 className="text-5xl md:text-7xl font-serif leading-[1.1]">Returns <span className="italic">& Exchanges</span></h1>
         </header>
 
-        <div className="prose prose-brand max-w-none space-y-12 text-brand-mocha/80">
+        <div className="space-y-12 text-brand-mocha/80">
           <section>
             <h2 className="text-3xl font-serif text-brand-mocha mb-6">30-Day Happiness Guarantee</h2>
             <p className="leading-loose text-lg font-light">

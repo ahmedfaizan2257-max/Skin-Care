@@ -20,6 +20,7 @@ import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react
 import { useState, useEffect, useLayoutEffect } from 'react';
 
 // --- Pages ---
+import { PRODUCTS } from './data/products';
 import Home from './pages/Home';
 import Shop from './pages/Shop';
 import AboutPage from './pages/About';
@@ -33,6 +34,13 @@ import BestSellers from './pages/BestSellers';
 import NewArrivals from './pages/NewArrivals';
 import TrackOrder from './pages/TrackOrder';
 import Blogs from './pages/Blogs';
+import Privacy from './pages/Privacy';
+import Terms from './pages/Terms';
+import Quiz from './pages/Quiz';
+import Science from './pages/Science';
+import Manifesto from './pages/Manifesto';
+import ProductDetail from './pages/ProductDetail';
+import CollectionDetail from './pages/CollectionDetail';
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -58,7 +66,7 @@ export const Navbar = () => {
   }, []);
 
   return (
-    <nav className="fixed top-0 w-full z-50 transition-all duration-300 border-b bg-white/95 backdrop-blur-md border-brand-mocha/10 shadow-sm py-2">
+    <nav className="fixed top-0 w-full z-50 transition-all duration-300 border-b bg-white/95 backdrop-blur-md border-brand-mocha/10 shadow-sm py-4">
       <div className="max-w-7xl mx-auto px-6 flex flex-col items-center text-brand-mocha">
         
         {/* Top Row: Mobile Menu (Left), Logo (Center), Actions (Right) */}
@@ -85,7 +93,7 @@ export const Navbar = () => {
         </div>
 
         {/* Bottom Row: Desktop Navigation Links */}
-        <div className="hidden md:flex gap-12 text-[10px] uppercase tracking-[0.25em] font-bold border-t border-brand-mocha/5 w-full justify-center pt-4">
+        <div className="hidden md:flex gap-12 text-[10px] uppercase tracking-[0.25em] font-bold border-t border-brand-mocha/5 w-full justify-center pt-6">
           <Link to="/" className="hover:text-brand-rose transition-all hover:tracking-[0.3em]">Home</Link>
           <Link to="/shop" className="hover:text-brand-rose transition-all hover:tracking-[0.3em]">Shop</Link>
           <Link to="/blogs" className="hover:text-brand-rose transition-all hover:tracking-[0.3em]">Blog</Link>
@@ -168,12 +176,12 @@ export const Hero = () => {
             transition={{ duration: 0.8, delay: 0.6 }}
             className="flex flex-col sm:flex-row gap-4 justify-center"
           >
-            <button className="bg-brand-mocha text-white px-10 py-5 font-bold tracking-[0.2em] uppercase text-[11px] rounded-[2px] hover:bg-brand-rose transition-all transform hover:-translate-y-0.5">
+            <Link to="/shop" className="w-full sm:w-auto bg-brand-mocha text-white px-10 py-5 font-bold tracking-[0.2em] uppercase text-[11px] rounded-[2px] hover:bg-brand-rose transition-all transform hover:-translate-y-0.5 text-center">
               Shop The Routine
-            </button>
-            <button className="border border-white text-white px-10 py-5 font-bold tracking-[0.2em] uppercase text-[11px] rounded-[2px] backdrop-blur-sm hover:bg-white hover:text-brand-mocha transition-all transform hover:-translate-y-0.5">
+            </Link>
+            <Link to="/quiz" className="w-full sm:w-auto border border-white text-white px-10 py-5 font-bold tracking-[0.2em] uppercase text-[11px] rounded-[2px] backdrop-blur-sm hover:bg-white hover:text-brand-mocha transition-all transform hover:-translate-y-0.5 text-center">
               Take Skin Quiz
-            </button>
+            </Link>
           </motion.div>
         </div>
       </div>
@@ -228,13 +236,13 @@ interface ProductCardProps {
   rating: number;
 }
 
-export const ProductCard = ({ name, price, description, image, tag, rating }: ProductCardProps) => {
+export const ProductCard = ({ name, price, description, image, tag, rating, id }: ProductCardProps & { id?: string }) => {
   return (
     <motion.div 
       whileHover={{ y: -5 }}
       className="group bg-white p-[15px] shadow-sleek rounded-[4px] border border-brand-cream/50"
     >
-      <div className="relative aspect-square bg-[#F2F2F2] overflow-hidden mb-5">
+      <Link to={id ? `/product/${id}` : "/shop"} className="block relative aspect-square bg-[#F2F2F2] overflow-hidden mb-5">
         <img 
           src={image} 
           alt={name} 
@@ -245,7 +253,7 @@ export const ProductCard = ({ name, price, description, image, tag, rating }: Pr
             {tag}
           </span>
         )}
-      </div>
+      </Link>
       <div className="space-y-1">
         <div className="flex items-center gap-1 mb-1">
           {[...Array(5)].map((_, i) => (
@@ -253,11 +261,13 @@ export const ProductCard = ({ name, price, description, image, tag, rating }: Pr
           ))}
           <span className="text-[10px] font-bold text-brand-mocha/30 ml-1 uppercase">(128)</span>
         </div>
-        <h3 className="font-serif text-lg leading-tight">{name}</h3>
+        <Link to={id ? `/product/${id}` : "/shop"}>
+          <h3 className="font-serif text-lg leading-tight hover:text-brand-rose transition-colors">{name}</h3>
+        </Link>
         <p className="text-[12px] opacity-70 leading-relaxed max-w-[90%]">{description}</p>
         <div className="flex justify-between items-center pt-3 mt-1">
            <span className="font-bold text-base tracking-tight">{price}</span>
-           <button className="bg-brand-sage text-white px-4 py-2 text-[10px] font-bold uppercase rounded-[2px] hover:bg-brand-mocha transition-colors">
+           <button className="bg-brand-sage text-white px-6 py-3 text-[10px] font-bold uppercase rounded-[2px] hover:bg-brand-mocha transition-colors">
               Add To Cart
            </button>
         </div>
@@ -267,30 +277,8 @@ export const ProductCard = ({ name, price, description, image, tag, rating }: Pr
 };
 
 export const FeaturedProducts = () => {
-  const products = [
-    {
-      name: "Clarity Cleanser",
-      price: "$28.00",
-      description: "Deeply cleanses without stripping moisture.",
-      image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=600&auto=format&fit=crop",
-      tag: "Only 12 left!",
-      rating: 4.8
-    },
-    {
-      name: "Botanical Face Oil",
-      price: "$45.00",
-      description: "A blend of 12 organic oils to restore your outer glow.",
-      image: "https://images.unsplash.com/photo-1608248597279-f99d160bfcbc?q=80&w=600&auto=format&fit=crop",
-      rating: 4.9
-    },
-    {
-      name: "Daily SPF Moisturiser",
-      price: "$35.00",
-      description: "Broad spectrum protection for sensitive skin.",
-      image: "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?q=80&w=600&auto=format&fit=crop",
-      rating: 4.7
-    }
-  ];
+  // Use the first 3 products as featured
+  const products = PRODUCTS.slice(0, 3);
 
   return (
     <section className="py-24 bg-brand-cream">
@@ -301,7 +289,8 @@ export const FeaturedProducts = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 xl:gap-12">
           {products.map((p, i) => (
             <ProductCard 
-              key={i} 
+              key={p.id} 
+              id={p.id}
               name={p.name}
               price={p.price}
               description={p.description}
@@ -322,21 +311,21 @@ export const Collections = () => {
       title: "The Glass Skin Set",
       subtitle: "Ultimate Radiance",
       image: "https://images.unsplash.com/photo-1612817288484-6f916006741a?q=80&w=800&auto=format&fit=crop",
-      link: "#",
+      link: "/collection/cleansers",
       color: "bg-[#F9F5F1]"
     },
     {
       title: "The Barrier Rescue",
       subtitle: "Strength & Repair",
       image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=800&auto=format&fit=crop",
-      link: "#",
+      link: "/collection/serums",
       color: "bg-[#F1F5F9]"
     },
     {
       title: "The Night Ritual",
       subtitle: "Restorative Care",
       image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=800&auto=format&fit=crop",
-      link: "#",
+      link: "/collection/moisturizers",
       color: "bg-[#F9F1F1]"
     }
   ];
@@ -349,31 +338,36 @@ export const Collections = () => {
             <span className="text-brand-rose uppercase tracking-[0.2em] text-[10px] font-bold mb-4 block">Curated Sets</span>
             <h2 className="text-4xl md:text-5xl font-serif leading-tight">Explore Our Collections</h2>
           </div>
-          <button className="text-[11px] font-bold uppercase tracking-widest border-b border-brand-mocha pb-1 hover:text-brand-rose hover:border-brand-rose transition-colors">
+          <Link to="/bundles" className="text-[11px] font-bold uppercase tracking-widest border-b border-brand-mocha pb-1 hover:text-brand-rose hover:border-brand-rose transition-colors">
             View All Bundles
-          </button>
+          </Link>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {collections.map((col, idx) => (
-            <motion.div 
+            <Link 
               key={idx}
-              whileHover={{ y: -10 }}
-              className={`relative aspect-[4/5] overflow-hidden group cursor-pointer ${col.color}`}
+              to={col.link}
+              className="block"
             >
-              <img 
-                src={col.image} 
-                alt={col.title} 
-                className="w-full h-full object-cover mix-blend-multiply opacity-90 group-hover:scale-110 transition-transform duration-1000"
-              />
-              <div className="absolute inset-x-0 bottom-0 p-8 pt-20 bg-gradient-to-t from-white/90 via-white/40 to-transparent">
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-brand-rose mb-2 block">{col.subtitle}</span>
-                <h3 className="text-2xl font-serif mb-4">{col.title}</h3>
-                <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest group-hover:gap-4 transition-all">
-                  Shop Collection <ChevronRight className="w-3 h-3" />
+              <motion.div 
+                whileHover={{ y: -10 }}
+                className={`relative aspect-[4/5] overflow-hidden group cursor-pointer ${col.color}`}
+              >
+                <img 
+                  src={col.image} 
+                  alt={col.title} 
+                  className="w-full h-full object-cover mix-blend-multiply opacity-90 group-hover:scale-110 transition-transform duration-1000"
+                />
+                <div className="absolute inset-x-0 bottom-0 p-8 pt-20 bg-gradient-to-t from-white/90 via-white/40 to-transparent">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-brand-rose mb-2 block">{col.subtitle}</span>
+                  <h3 className="text-2xl font-serif mb-4">{col.title}</h3>
+                  <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest group-hover:gap-4 transition-all">
+                    Shop Collection <ChevronRight className="w-3 h-3" />
+                  </div>
                 </div>
-              </div>
-            </motion.div>
+              </motion.div>
+            </Link>
           ))}
         </div>
       </div>
@@ -492,9 +486,18 @@ export const About = () => {
                 <p>Skinrise Collective was founded on the belief that clear skin shouldn't come at the cost of a damaged barrier. We formulated everything in-house with leading dermatologists to ensure efficacy without irritation.</p>
                 <p>Our goal is simple: to help you fall in love with your reflection again, one gentle step at a time.</p>
              </div>
-             <button className="inline-flex items-center gap-3 border-b-2 border-brand-mocha pb-1 font-bold text-sm uppercase tracking-widest hover:text-brand-rose hover:border-brand-rose transition-colors">
-                Our Full Manifesto <ArrowRight className="w-4 h-4" />
-             </button>
+             <div className="flex flex-col sm:flex-row gap-6 pt-4 relative z-30">
+                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                    <Link to="/manifesto" className="block bg-brand-mocha text-white px-10 py-5 font-bold text-[11px] uppercase tracking-widest hover:bg-brand-rose transition-all text-center rounded-sm shadow-lg">
+                       Our Full Manifesto
+                    </Link>
+                </motion.div>
+                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                    <Link to="/science" className="block border-2 border-brand-mocha px-10 py-5 font-bold text-[11px] uppercase tracking-widest hover:bg-brand-mocha hover:text-white transition-all text-center rounded-sm">
+                       View Scientific Data
+                    </Link>
+                </motion.div>
+             </div>
           </div>
        </div>
     </section>
@@ -549,7 +552,7 @@ export const Signup = () => {
                placeholder="Enter your email address" 
                className="flex-1 md:w-[250px] bg-white text-brand-mocha px-6 py-3 text-xs focus:outline-none rounded-[2px]"
              />
-             <button className="bg-brand-mocha text-white px-8 py-3 uppercase font-bold tracking-widest text-[11px] hover:bg-brand-sage transition-all rounded-[2px]">
+             <button className="bg-brand-mocha text-white px-10 py-4 uppercase font-bold tracking-widest text-[11px] hover:bg-brand-sage transition-all rounded-[2px]">
                Subscribe
              </button>
           </form>
@@ -578,6 +581,7 @@ const Footer = () => {
                    <li><Link to="/shop" className="hover:text-brand-rose transition-colors">Shop All</Link></li>
                    <li><Link to="/bundles" className="hover:text-brand-rose transition-colors">Bundles</Link></li>
                    <li><Link to="/best-sellers" className="hover:text-brand-rose transition-colors">Best Sellers</Link></li>
+                   <li><Link to="/new-arrivals" className="hover:text-brand-rose transition-colors">New Arrivals</Link></li>
                    <li><Link to="/blogs" className="hover:text-brand-rose transition-colors">The Journal</Link></li>
                 </ul>
              </div>
@@ -602,8 +606,15 @@ const Footer = () => {
                 </p>
              </div>
           </div>
-          <div className="border-t border-brand-cream pt-12 text-center text-[10px] uppercase font-bold tracking-[0.2em] text-brand-mocha/30">
-            © 2026 Skinrise Collective. All Rights Reserved. Built with ritual and care.
+          <div className="border-t border-brand-cream pt-12 text-center">
+            <div className="flex justify-center gap-8 text-[10px] uppercase font-bold tracking-[0.2em] text-brand-mocha/40 mb-4">
+              <Link to="/privacy" className="hover:text-brand-rose transition-colors">Privacy Policy</Link>
+              <Link to="/terms" className="hover:text-brand-rose transition-colors">Terms of Service</Link>
+              <Link to="/shipping" className="hover:text-brand-rose transition-colors">Shipping Info</Link>
+            </div>
+            <div className="text-[10px] uppercase font-bold tracking-[0.2em] text-brand-mocha/30">
+              © 2026 Skinrise Collective. All Rights Reserved. Built with ritual and care.
+            </div>
           </div>
        </div>
     </footer>
@@ -637,9 +648,11 @@ export const ProductDemo = () => {
                 </div>
               </div>
             </div>
-            <button className="bg-brand-mocha text-white px-10 py-5 font-bold tracking-[0.2em] uppercase text-[11px] rounded-[2px] transition-all hover:bg-brand-rose">
-              View Scientific Data
-            </button>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="relative z-30">
+              <Link to="/science" className="bg-brand-mocha text-white px-10 py-5 font-bold tracking-[0.2em] uppercase text-[11px] rounded-[2px] transition-all hover:bg-brand-rose flex items-center justify-center text-center cursor-pointer w-full sm:w-auto shadow-xl">
+                View Scientific Data
+              </Link>
+            </motion.div>
           </div>
           <div className="relative aspect-square md:aspect-video lg:aspect-square bg-brand-cream overflow-hidden shadow-2xl rounded-sm">
              <img 
@@ -684,6 +697,13 @@ export default function App() {
             <Route path="/skin-concierge" element={<SkinConcierge />} />
             <Route path="/track-order" element={<TrackOrder />} />
             <Route path="/blogs" element={<Blogs />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/quiz" element={<Quiz />} />
+            <Route path="/science" element={<Science />} />
+            <Route path="/manifesto" element={<Manifesto />} />
+            <Route path="/product/:id" element={<ProductDetail />} />
+            <Route path="/collection/:id" element={<CollectionDetail />} />
           </Routes>
         </main>
 
