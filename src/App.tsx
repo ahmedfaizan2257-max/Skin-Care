@@ -21,6 +21,7 @@ import { useState, useEffect, useLayoutEffect } from 'react';
 
 // --- Pages ---
 import { PRODUCTS } from './data/products';
+import { ChatBox } from './components/ChatBox';
 import Home from './pages/Home';
 import Shop from './pages/Shop';
 import AboutPage from './pages/About';
@@ -716,11 +717,8 @@ export default function App() {
            </Link>
         </div>
 
-        {/* Chat Bubble */}
-        <button className="fixed bottom-24 right-6 md:bottom-10 md:right-10 bg-white border border-brand-cream p-4 rounded-full shadow-lg z-40 hover:bg-brand-cream transition-colors group">
-           <span className="absolute right-full mr-4 top-1/2 -translate-y-1/2 bg-brand-mocha text-white text-[10px] font-bold uppercase tracking-widest py-2 px-4 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">Skin Concierge</span>
-           <ChevronRight className="w-5 h-5 text-brand-mocha rotate-[-45deg]" />
-        </button>
+        {/* AI Skin Concierge Chatbox */}
+        <ChatBox />
       </div>
     </Router>
   );
