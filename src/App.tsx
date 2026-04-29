@@ -16,13 +16,40 @@ import {
   Menu,
   X
 } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { useState, useEffect, useLayoutEffect } from 'react';
+
+// --- Pages ---
+import Home from './pages/Home';
+import Shop from './pages/Shop';
+import AboutPage from './pages/About';
+import ContactPage from './pages/Contact';
+import Bundles from './pages/Bundles';
+import HelpCenter from './pages/HelpCenter';
+import Shipping from './pages/Shipping';
+import Returns from './pages/Returns';
+import SkinConcierge from './pages/SkinConcierge';
+import BestSellers from './pages/BestSellers';
+import NewArrivals from './pages/NewArrivals';
+import TrackOrder from './pages/TrackOrder';
+import Blogs from './pages/Blogs';
+
+// Scroll to top on route change
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+};
 
 // --- Components ---
 
-const Navbar = () => {
+export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -31,65 +58,74 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className={`fixed top-0 w-full z-50 transition-all duration-300 border-b ${isScrolled ? 'bg-white/95 backdrop-blur-md border-brand-mocha/10 shadow-sm py-3' : 'bg-transparent border-transparent py-6'}`}>
-      <div className="max-w-7xl mx-auto px-6 flex justify-between items-center text-brand-mocha">
-        <div className="flex items-center gap-8">
-          <button className="md:hidden" onClick={() => setMobileMenuOpen(true)}>
-            <Menu className="w-6 h-6" />
-          </button>
-          <div className="hidden md:flex gap-8 text-[11px] uppercase tracking-[0.15em] font-bold">
-            <a href="#" className="hover:text-brand-rose transition-colors">Home</a>
-            <a href="#" className="hover:text-brand-rose transition-colors">Shop</a>
-            <a href="#" className="hover:text-brand-rose transition-colors">About</a>
+    <nav className="fixed top-0 w-full z-50 transition-all duration-300 border-b bg-white/95 backdrop-blur-md border-brand-mocha/10 shadow-sm py-2">
+      <div className="max-w-7xl mx-auto px-6 flex flex-col items-center text-brand-mocha">
+        
+        {/* Top Row: Mobile Menu (Left), Logo (Center), Actions (Right) */}
+        <div className="w-full flex justify-between items-center mb-4">
+          <div className="flex-1 flex justify-start">
+            <button className="md:hidden" onClick={() => setMobileMenuOpen(true)}>
+              <Menu className="w-6 h-6" />
+            </button>
+          </div>
+
+          <Link to="/" className="flex-1 text-center text-xl md:text-3xl font-serif font-bold tracking-[0.2em] hover:opacity-80 transition-opacity">
+            SKINRISE COLLECTIVE
+          </Link>
+
+          <div className="flex-1 flex justify-end items-center gap-6">
+            <button className="hover:text-brand-rose transition-colors">
+              <Search className="w-5 h-5" />
+            </button>
+            <button className="relative hover:text-brand-rose transition-colors text-[11px] font-bold uppercase tracking-widest flex items-center gap-2">
+              <ShoppingBag className="w-5 h-5" />
+              <span className="hidden lg:inline opacity-40 text-[9px]">(0)</span>
+            </button>
           </div>
         </div>
 
-        <a href="/" className="text-xl md:text-2xl font-serif font-bold tracking-wider hover:opacity-80 transition-opacity">
-          SKINRISE COLLECTIVE
-        </a>
-
-        <div className="flex items-center gap-6">
-          <div className="hidden md:flex gap-6 uppercase text-[11px] font-bold tracking-[0.15em]">
-             <a href="#" className="hover:text-brand-rose transition-colors">Contact</a>
-          </div>
-          <button className="hover:text-brand-rose transition-colors">
-            <Search className="w-5 h-5" />
-          </button>
-          <button className="relative hover:text-brand-rose transition-colors text-[11px] font-bold uppercase tracking-widest flex items-center gap-2">
-            <ShoppingBag className="w-5 h-5" />
-            <span className="hidden lg:inline text-brand-mocha/40 text-[9px]">(0)</span>
-          </button>
+        {/* Bottom Row: Desktop Navigation Links */}
+        <div className="hidden md:flex gap-12 text-[10px] uppercase tracking-[0.25em] font-bold border-t border-brand-mocha/5 w-full justify-center pt-4">
+          <Link to="/" className="hover:text-brand-rose transition-all hover:tracking-[0.3em]">Home</Link>
+          <Link to="/shop" className="hover:text-brand-rose transition-all hover:tracking-[0.3em]">Shop</Link>
+          <Link to="/blogs" className="hover:text-brand-rose transition-all hover:tracking-[0.3em]">Blog</Link>
+          <Link to="/track-order" className="hover:text-brand-rose transition-all hover:tracking-[0.3em]">Track Order</Link>
+          <Link to="/about" className="hover:text-brand-rose transition-all hover:tracking-[0.3em]">About</Link>
+          <Link to="/contact" className="hover:text-brand-rose transition-all hover:tracking-[0.3em]">Contact</Link>
         </div>
       </div>
 
       {/* Mobile Menu Overlay */}
-      {mobileMenuOpen && (
-        <motion.div 
-          initial={{ opacity: 0, x: '-100%' }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: '-100%' }}
-          className="fixed inset-0 bg-white z-[60] flex flex-col p-8"
-        >
-          <div className="flex justify-between items-center mb-12">
-            <span className="font-serif text-xl">Skinrise Collective</span>
-            <button onClick={() => setMobileMenuOpen(false)}><X className="w-6 h-6" /></button>
-          </div>
-          <div className="flex flex-col gap-8 text-2xl font-serif italic">
-            <a href="#" onClick={() => setMobileMenuOpen(false)}>Home</a>
-            <a href="#" onClick={() => setMobileMenuOpen(false)}>Shop Shop</a>
-            <a href="#" onClick={() => setMobileMenuOpen(false)}>Our Story</a>
-            <a href="#" onClick={() => setMobileMenuOpen(false)}>Skin Blog</a>
-            <a href="#" onClick={() => setMobileMenuOpen(false)}>Contact Us</a>
-          </div>
-        </motion.div>
-      )}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, x: '-100%' }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: '-100%' }}
+            className="fixed inset-0 bg-white z-[60] flex flex-col p-8"
+          >
+            <div className="flex justify-between items-center mb-12">
+              <span className="font-serif text-xl border-b border-brand-mocha pb-1">Skinrise Collective</span>
+              <button onClick={() => setMobileMenuOpen(false)}><X className="w-6 h-6" /></button>
+            </div>
+            <div className="flex flex-col gap-8 text-2xl font-serif italic text-brand-mocha">
+              <Link to="/" onClick={() => setMobileMenuOpen(false)}>Home</Link>
+              <Link to="/shop" onClick={() => setMobileMenuOpen(false)}>Shop Collections</Link>
+              <Link to="/blogs" onClick={() => setMobileMenuOpen(false)}>The Journal</Link>
+              <Link to="/track-order" onClick={() => setMobileMenuOpen(false)}>Track Order</Link>
+              <Link to="/about" onClick={() => setMobileMenuOpen(false)}>Our Story</Link>
+              <Link to="/contact" onClick={() => setMobileMenuOpen(false)}>Contact Us</Link>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 };
 
-const Hero = ({ onOpenVideo }) => {
+export const Hero = () => {
   return (
-    <section className="relative h-screen w-full flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-screen w-full flex items-center justify-center overflow-hidden pt-32 md:pt-44">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <img 
@@ -100,8 +136,8 @@ const Hero = ({ onOpenVideo }) => {
         <div className="absolute inset-0 bg-brand-mocha/30 mix-blend-multiply" />
       </div>
 
-      <div className="relative z-10 text-center px-6 max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-12 items-center">
-        <div className="text-left">
+      <div className="relative z-10 text-center px-6 max-w-2xl mx-auto flex flex-col items-center">
+        <div className="text-center flex flex-col items-center">
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -130,7 +166,7 @@ const Hero = ({ onOpenVideo }) => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="flex flex-col sm:flex-row gap-4"
+            className="flex flex-col sm:flex-row gap-4 justify-center"
           >
             <button className="bg-brand-mocha text-white px-10 py-5 font-bold tracking-[0.2em] uppercase text-[11px] rounded-[2px] hover:bg-brand-rose transition-all transform hover:-translate-y-0.5">
               Shop The Routine
@@ -139,22 +175,6 @@ const Hero = ({ onOpenVideo }) => {
               Take Skin Quiz
             </button>
           </motion.div>
-        </div>
-        <div className="hidden lg:flex items-center justify-center relative">
-           <motion.div 
-             initial={{ opacity: 0, scale: 0.9 }}
-             animate={{ opacity: 1, scale: 1 }}
-             onClick={onOpenVideo}
-             transition={{ duration: 1 }}
-             className="w-full aspect-square bg-gradient-to-br from-brand-rose/20 to-brand-sage/20 border border-white/10 backdrop-blur-3xl flex items-center justify-center group cursor-pointer"
-           >
-              <div className="w-20 h-20 bg-white/20 backdrop-blur-md rounded-full border border-white/50 flex items-center justify-center group-hover:scale-110 transition-transform">
-                 <div className="w-0 h-0 border-t-[10px] border-t-transparent border-b-[10px] border-b-transparent border-l-[15px] border-l-white ml-2" />
-              </div>
-              <div className="absolute bottom-6 left-6 text-white text-[10px] font-bold uppercase tracking-widest text-left">
-                 Real Results Story:<br/><span className="text-white/60">Sarah's 4-Week Journey</span>
-              </div>
-           </motion.div>
         </div>
       </div>
 
@@ -177,7 +197,7 @@ const Hero = ({ onOpenVideo }) => {
   );
 };
 
-const TrustBar = () => {
+export const TrustBar = () => {
   const trusts = [
     { label: "Non-Comedogenic", icon: "✓" },
     { label: "Cruelty Free", icon: "✓" },
@@ -208,7 +228,7 @@ interface ProductCardProps {
   rating: number;
 }
 
-const ProductCard = ({ name, price, description, image, tag, rating }: ProductCardProps) => {
+export const ProductCard = ({ name, price, description, image, tag, rating }: ProductCardProps) => {
   return (
     <motion.div 
       whileHover={{ y: -5 }}
@@ -246,7 +266,7 @@ const ProductCard = ({ name, price, description, image, tag, rating }: ProductCa
   );
 };
 
-const FeaturedProducts = () => {
+export const FeaturedProducts = () => {
   const products = [
     {
       name: "Clarity Cleanser",
@@ -257,10 +277,10 @@ const FeaturedProducts = () => {
       rating: 4.8
     },
     {
-      name: "Calm + Clear Serum",
-      price: "$42.00",
-      description: "Soothes redness and targets active breakouts.",
-      image: "https://images.unsplash.com/photo-1611080626919-7cf5a9dcab5b?q=80&w=600&auto=format&fit=crop",
+      name: "Botanical Face Oil",
+      price: "$45.00",
+      description: "A blend of 12 organic oils to restore your outer glow.",
+      image: "https://images.unsplash.com/photo-1608248597279-f99d160bfcbc?q=80&w=600&auto=format&fit=crop",
       rating: 4.9
     },
     {
@@ -296,7 +316,72 @@ const FeaturedProducts = () => {
   );
 };
 
-const HowItWorks = () => {
+export const Collections = () => {
+  const collections = [
+    {
+      title: "The Glass Skin Set",
+      subtitle: "Ultimate Radiance",
+      image: "https://images.unsplash.com/photo-1612817288484-6f916006741a?q=80&w=800&auto=format&fit=crop",
+      link: "#",
+      color: "bg-[#F9F5F1]"
+    },
+    {
+      title: "The Barrier Rescue",
+      subtitle: "Strength & Repair",
+      image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=800&auto=format&fit=crop",
+      link: "#",
+      color: "bg-[#F1F5F9]"
+    },
+    {
+      title: "The Night Ritual",
+      subtitle: "Restorative Care",
+      image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=800&auto=format&fit=crop",
+      link: "#",
+      color: "bg-[#F9F1F1]"
+    }
+  ];
+
+  return (
+    <section className="py-24 bg-white">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+          <div className="max-w-xl">
+            <span className="text-brand-rose uppercase tracking-[0.2em] text-[10px] font-bold mb-4 block">Curated Sets</span>
+            <h2 className="text-4xl md:text-5xl font-serif leading-tight">Explore Our Collections</h2>
+          </div>
+          <button className="text-[11px] font-bold uppercase tracking-widest border-b border-brand-mocha pb-1 hover:text-brand-rose hover:border-brand-rose transition-colors">
+            View All Bundles
+          </button>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {collections.map((col, idx) => (
+            <motion.div 
+              key={idx}
+              whileHover={{ y: -10 }}
+              className={`relative aspect-[4/5] overflow-hidden group cursor-pointer ${col.color}`}
+            >
+              <img 
+                src={col.image} 
+                alt={col.title} 
+                className="w-full h-full object-cover mix-blend-multiply opacity-90 group-hover:scale-110 transition-transform duration-1000"
+              />
+              <div className="absolute inset-x-0 bottom-0 p-8 pt-20 bg-gradient-to-t from-white/90 via-white/40 to-transparent">
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-brand-rose mb-2 block">{col.subtitle}</span>
+                <h3 className="text-2xl font-serif mb-4">{col.title}</h3>
+                <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest group-hover:gap-4 transition-all">
+                  Shop Collection <ChevronRight className="w-3 h-3" />
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export const HowItWorks = () => {
   const steps = [
     { title: "Cleanse", desc: "Remove dirt, oil & impurities gently without stripping natural oils.", idx: "01" },
     { title: "Treat", desc: "Target breakouts with active, dermatologically-proven ingredients.", idx: "02" },
@@ -329,7 +414,7 @@ const HowItWorks = () => {
   );
 };
 
-const Results = () => {
+export const Results = () => {
   const testimonials = [
     {
        name: "Sarah J.",
@@ -385,13 +470,13 @@ const Results = () => {
   );
 };
 
-const About = () => {
+export const About = () => {
   return (
     <section className="py-24 bg-brand-cream">
        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center gap-16 lg:gap-24">
           <div className="w-full md:w-1/2 aspect-[4/5] relative">
              <img 
-               src="https://images.unsplash.com/photo-1596462502278-27bfdc4033c8?q=80&w=800&auto=format&fit=crop" 
+               src="https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?q=80&w=800&auto=format&fit=crop" 
                alt="Skinrise Founder" 
                className="w-full h-full object-cover"
              />
@@ -416,12 +501,11 @@ const About = () => {
   );
 };
 
-const InstagramStrip = () => {
+export const InstagramStrip = () => {
   const images = [
      "https://images.unsplash.com/photo-1612817288484-6f916006741a?q=80&w=300&auto=format&fit=crop",
      "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=300&auto=format&fit=crop",
-     "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?q=80&w=300&auto=format&fit=crop",
-     "https://images.unsplash.com/photo-1594125355938-1ee46067852c?q=80&w=300&auto=format&fit=crop",
+     "https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=400&auto=format&fit=crop",
      "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=300&auto=format&fit=crop",
      "https://images.unsplash.com/photo-1552332386-f8dd00dc2f85?q=80&w=300&auto=format&fit=crop"
   ];
@@ -433,9 +517,9 @@ const InstagramStrip = () => {
           <p className="text-brand-rose font-medium tracking-[0.2em] uppercase text-sm mb-12 flex justify-center items-center gap-2">
             @skinrisecollective <span className="w-8 h-[1px] bg-brand-rose" />
           </p>
-          <div className="flex flex-wrap md:flex-nowrap">
+          <div className="flex flex-wrap md:flex-nowrap justify-center">
              {images.map((img, i) => (
-                <div key={i} className="w-1/2 md:w-1/6 aspect-square overflow-hidden group cursor-pointer border-r border-b border-brand-cream/10">
+                <div key={i} className="w-1/2 md:w-1/5 aspect-square overflow-hidden group cursor-pointer border-r border-b border-brand-cream/10">
                    <img src={img} alt="Skin" className="w-full h-full object-cover group-hover:scale-110 group-hover:rotate-3 transition-transform duration-700" />
                    <div className="absolute inset-0 bg-brand-mocha/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                       <Instagram className="text-white w-6 h-6" />
@@ -451,7 +535,7 @@ const InstagramStrip = () => {
   );
 };
 
-const Signup = () => {
+export const Signup = () => {
   return (
     <section className="px-6 pb-24">
        <div className="max-w-7xl mx-auto bg-brand-rose h-[150px] md:h-[120px] flex flex-col md:flex-row items-center justify-between px-12 text-white overflow-hidden">
@@ -488,24 +572,24 @@ const Footer = () => {
                    <a href="#" className="hover:text-brand-rose transition-colors font-bold text-sm tracking-tighter italic font-serif">TikTok</a>
                 </div>
              </div>
-             
-             <div>
+                <div>
                 <h4 className="font-bold uppercase text-[10px] tracking-[0.3em] mb-8 opacity-40">Store</h4>
                 <ul className="space-y-4 text-sm font-medium">
-                   <li><a href="#" className="hover:text-brand-rose transition-colors">Shop All</a></li>
-                   <li><a href="#" className="hover:text-brand-rose transition-colors">Bundles</a></li>
-                   <li><a href="#" className="hover:text-brand-rose transition-colors">Best Sellers</a></li>
-                   <li><a href="#" className="hover:text-brand-rose transition-colors">New Arrivals</a></li>
+                   <li><Link to="/shop" className="hover:text-brand-rose transition-colors">Shop All</Link></li>
+                   <li><Link to="/bundles" className="hover:text-brand-rose transition-colors">Bundles</Link></li>
+                   <li><Link to="/best-sellers" className="hover:text-brand-rose transition-colors">Best Sellers</Link></li>
+                   <li><Link to="/blogs" className="hover:text-brand-rose transition-colors">The Journal</Link></li>
                 </ul>
              </div>
 
              <div>
                 <h4 className="font-bold uppercase text-[10px] tracking-[0.3em] mb-8 opacity-40">Support</h4>
                 <ul className="space-y-4 text-sm font-medium">
-                   <li><a href="#" className="hover:text-brand-rose transition-colors">Help Center</a></li>
-                   <li><a href="#" className="hover:text-brand-rose transition-colors">Shipping</a></li>
-                   <li><a href="#" className="hover:text-brand-rose transition-colors">Returns</a></li>
-                   <li><a href="#" className="hover:text-brand-rose transition-colors">Skin Concierge</a></li>
+                   <li><Link to="/help-center" className="hover:text-brand-rose transition-colors">Help Center</Link></li>
+                   <li><Link to="/shipping" className="hover:text-brand-rose transition-colors">Shipping</Link></li>
+                   <li><Link to="/returns" className="hover:text-brand-rose transition-colors">Returns</Link></li>
+                   <li><Link to="/track-order" className="hover:text-brand-rose transition-colors">Track Order</Link></li>
+                   <li><Link to="/skin-concierge" className="hover:text-brand-rose transition-colors">Skin Concierge</Link></li>
                 </ul>
              </div>
 
@@ -526,42 +610,7 @@ const Footer = () => {
   );
 };
 
-const VideoModal = ({ isOpen, onClose, videoSrc }) => {
-  if (!isOpen) return null;
-  return (
-    <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-brand-mocha/95 p-6"
-      onClick={onClose}
-    >
-      <motion.div 
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        className="relative w-full max-w-5xl aspect-video bg-black shadow-2xl overflow-hidden"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <button 
-          onClick={onClose}
-          className="absolute top-4 right-4 text-white hover:text-brand-rose z-10 transition-colors"
-        >
-          <X className="w-8 h-8" />
-        </button>
-        <iframe 
-          className="w-full h-full"
-          src={`${videoSrc}?autoplay=1&muted=0`}
-          title="Video Player"
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        ></iframe>
-      </motion.div>
-    </motion.div>
-  );
-};
-
-const ProductDemo = () => {
+export const ProductDemo = () => {
   return (
     <section className="py-24 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">
@@ -593,22 +642,15 @@ const ProductDemo = () => {
             </button>
           </div>
           <div className="relative aspect-square md:aspect-video lg:aspect-square bg-brand-cream overflow-hidden shadow-2xl rounded-sm">
-             <video 
-               autoPlay 
-               loop 
-               muted 
-               playsInline
-               className="w-full h-full object-cover grayscale brightness-110 contrast-125"
-             >
-               <source 
-                 src="https://player.vimeo.com/external/393717144.sd.mp4?s=d0728cceb80456c6dbf6f1c4df191833c690f055&profile_id=165&oauth2_token_id=57447761" 
-                 type="video/mp4" 
-               />
-             </video>
+             <img 
+               src="https://images.unsplash.com/photo-1556229010-6c3f2c9ca5f8?q=80&w=1000&auto=format&fit=crop" 
+               alt="Skincare routine application"
+               className="w-full h-full object-cover" 
+             />
              <div className="absolute inset-0 bg-brand-rose/10 mix-blend-overlay" />
              <div className="absolute bottom-10 left-10 text-white">
-                <p className="text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Live Demo</p>
-                <h3 className="text-3xl font-serif">4 Minute Ritual</h3>
+                <p className="text-[10px] font-bold uppercase tracking-[0.3em] mb-2">The Ritual</p>
+                <h3 className="text-3xl font-serif">4 Minute Transformation</h3>
              </div>
           </div>
         </div>
@@ -618,62 +660,64 @@ const ProductDemo = () => {
 };
 
 export default function App() {
+  return (
+    <Router>
+      <ScrollToTop />
+      <div className="relative selection:bg-brand-rose selection:text-white">
+        {/* Scroll progress bar - moved to a component that can use useScroll */}
+        <ScrollProgress />
+
+        <Navbar />
+        
+        <main>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/shop" element={<Shop />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/bundles" element={<Bundles />} />
+            <Route path="/best-sellers" element={<BestSellers />} />
+            <Route path="/new-arrivals" element={<NewArrivals />} />
+            <Route path="/help-center" element={<HelpCenter />} />
+            <Route path="/shipping" element={<Shipping />} />
+            <Route path="/returns" element={<Returns />} />
+            <Route path="/skin-concierge" element={<SkinConcierge />} />
+            <Route path="/track-order" element={<TrackOrder />} />
+            <Route path="/blogs" element={<Blogs />} />
+          </Routes>
+        </main>
+
+        <Footer />
+
+        {/* Mobile Sticky CTA */}
+        <div className="md:hidden fixed bottom-6 left-6 right-6 z-40">
+           <Link to="/shop" className="w-full bg-brand-mocha text-white py-5 shadow-2xl uppercase text-[11px] tracking-[0.2em] font-bold rounded-[100px] flex items-center justify-center">
+              Shop Now →
+           </Link>
+        </div>
+
+        {/* Chat Bubble */}
+        <button className="fixed bottom-24 right-6 md:bottom-10 md:right-10 bg-white border border-brand-cream p-4 rounded-full shadow-lg z-40 hover:bg-brand-cream transition-colors group">
+           <span className="absolute right-full mr-4 top-1/2 -translate-y-1/2 bg-brand-mocha text-white text-[10px] font-bold uppercase tracking-widest py-2 px-4 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">Skin Concierge</span>
+           <ChevronRight className="w-5 h-5 text-brand-mocha rotate-[-45deg]" />
+        </button>
+      </div>
+    </Router>
+  );
+}
+
+const ScrollProgress = () => {
   const { scrollYProgress } = useScroll();
-  const [videoModal, setVideoModal] = useState({ open: false, src: '' });
-  
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
     restDelta: 0.001
   });
-
   return (
-    <div className="relative selection:bg-brand-rose selection:text-white">
-      {/* Scroll progress bar */}
-      <motion.div
-        className="fixed top-0 left-0 right-0 h-[2px] bg-brand-rose z-[70] origin-left"
-        style={{ scaleX }}
-      />
-
-      <Navbar />
-      
-      <main>
-        <Hero onOpenVideo={() => setVideoModal({ open: true, src: 'https://www.youtube.com/embed/dQw4w9WgXcQ' })} />
-        <TrustBar />
-        <FeaturedProducts />
-        <HowItWorks />
-        <ProductDemo />
-        <Results />
-        <About />
-        <InstagramStrip />
-        <Signup />
-      </main>
-
-      <Footer />
-
-      <AnimatePresence>
-        {videoModal.open && (
-          <VideoModal 
-            isOpen={videoModal.open} 
-            videoSrc={videoModal.src} 
-            onClose={() => setVideoModal({ ...videoModal, open: false })} 
-          />
-        )}
-      </AnimatePresence>
-
-      {/* Mobile Sticky CTA */}
-      <div className="md:hidden fixed bottom-6 left-6 right-6 z-40">
-         <button className="w-full bg-brand-mocha text-white py-5 shadow-2xl uppercase text-[11px] tracking-[0.2em] font-bold rounded-[100px]">
-            Shop Now →
-         </button>
-      </div>
-
-      {/* Chat Bubble */}
-      <button className="fixed bottom-24 right-6 md:bottom-10 md:right-10 bg-white border border-brand-cream p-4 rounded-full shadow-lg z-40 hover:bg-brand-cream transition-colors group">
-         <span className="absolute right-full mr-4 top-1/2 -translate-y-1/2 bg-brand-mocha text-white text-[10px] font-bold uppercase tracking-widest py-2 px-4 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">Skin Concierge</span>
-         <ChevronRight className="w-5 h-5 text-brand-mocha rotate-[-45deg]" />
-      </button>
-    </div>
+    <motion.div
+      className="fixed top-0 left-0 right-0 h-[2px] bg-brand-rose z-[70] origin-left"
+      style={{ scaleX }}
+    />
   );
-}
+};
 
