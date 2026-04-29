@@ -21,7 +21,6 @@ import { useState, useEffect, useLayoutEffect } from 'react';
 
 // --- Pages ---
 import { PRODUCTS } from './data/products';
-import { ChatBox } from './components/ChatBox';
 import Home from './pages/Home';
 import Shop from './pages/Shop';
 import AboutPage from './pages/About';
@@ -798,8 +797,6 @@ export default function App() {
            </Link>
         </div>
 
-        {/* AI Skin Concierge Chatbox */}
-        <ChatBox />
       </div>
     </Router>
   );
