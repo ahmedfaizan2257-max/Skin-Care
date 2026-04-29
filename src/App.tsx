@@ -90,20 +90,13 @@ const Navbar = () => {
 const Hero = ({ onOpenVideo }) => {
   return (
     <section className="relative h-screen w-full flex items-center justify-center overflow-hidden">
-      {/* Video Background */}
+      {/* Background Image */}
       <div className="absolute inset-0 z-0">
-        <video 
-          autoPlay 
-          loop 
-          muted 
-          playsInline
-          className="w-full h-full object-cover brightness-[0.7] contrast-[1.1]"
-        >
-          <source 
-            src="https://videos.pexels.com/video-files/3762466/3762466-sd_640_360_25fps.mp4" 
-            type="video/mp4" 
-          />
-        </video>
+        <img 
+          src="https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1600&auto=format&fit=crop" 
+          alt="Skinrise hero"
+          className="w-full h-full object-cover brightness-[0.7] contrast-[1.1]" 
+        />
         <div className="absolute inset-0 bg-brand-mocha/30 mix-blend-multiply" />
       </div>
 
