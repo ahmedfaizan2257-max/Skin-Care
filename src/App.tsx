@@ -57,14 +57,29 @@ const ScrollToTop = () => {
 export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const location = useLocation();
-  const isHomePage = location.pathname === '/';
+
+  const searchResults = searchQuery.trim() === '' 
+    ? [] 
+    : PRODUCTS.filter(p => 
+        p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+        p.category.toLowerCase().includes(searchQuery.toLowerCase())
+      ).slice(0, 5);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Close search/menu on route change
+  useEffect(() => {
+    setSearchOpen(false);
+    setMobileMenuOpen(false);
+    setSearchQuery('');
+  }, [location]);
 
   return (
     <nav className="fixed top-0 w-full z-50 transition-all duration-300 border-b bg-white/95 backdrop-blur-md border-brand-mocha/10 shadow-sm py-4">
@@ -76,16 +91,82 @@ export const Navbar = () => {
             <button className="md:hidden" onClick={() => setMobileMenuOpen(true)}>
               <Menu className="w-6 h-6" />
             </button>
+            <div className="hidden md:flex items-center gap-6">
+              <Instagram className="w-4 h-4 opacity-40 hover:opacity-100 cursor-pointer transition-opacity" />
+              <Facebook className="w-4 h-4 opacity-40 hover:opacity-100 cursor-pointer transition-opacity" />
+            </div>
           </div>
 
-          <Link to="/" className="flex-1 text-center text-xl md:text-3xl font-serif font-bold tracking-[0.2em] hover:opacity-80 transition-opacity">
+          <Link to="/" className="flex-1 text-center text-xl md:text-3xl font-serif font-bold tracking-[0.2em] hover:opacity-80 transition-opacity whitespace-nowrap">
             SKINRISE COLLECTIVE
           </Link>
 
-          <div className="flex-1 flex justify-end items-center gap-6">
-            <button className="hover:text-brand-rose transition-colors">
-              <Search className="w-5 h-5" />
-            </button>
+          <div className="flex-1 flex justify-end items-center gap-6 relative">
+            <div className="flex items-center gap-2">
+              <AnimatePresence>
+                {searchOpen && (
+                  <motion.div
+                    initial={{ width: 0, opacity: 0 }}
+                    animate={{ width: 200, opacity: 1 }}
+                    exit={{ width: 0, opacity: 0 }}
+                    className="relative"
+                  >
+                    <input 
+                      autoFocus
+                      type="text" 
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search products..." 
+                      className="w-full bg-brand-cream/50 border-b border-brand-mocha/20 py-1 px-2 text-[10px] font-bold uppercase tracking-widest focus:outline-none focus:border-brand-rose"
+                    />
+                    
+                    {/* Real-time suggestions dropdown */}
+                    <AnimatePresence>
+                      {searchResults.length > 0 && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 10 }}
+                          className="absolute top-full right-0 mt-4 w-[300px] bg-white shadow-2xl border border-brand-mocha/5 p-4 rounded-sm"
+                        >
+                          <div className="space-y-4">
+                            <span className="text-[8px] font-bold uppercase tracking-[0.2em] text-brand-rose block border-b border-brand-mocha/5 pb-2">Product Suggestions</span>
+                            {searchResults.map(p => (
+                              <Link 
+                                key={p.id} 
+                                to={`/product/${p.id}`}
+                                className="flex gap-4 group"
+                              >
+                                <div className="w-12 h-12 bg-brand-cream overflow-hidden flex-shrink-0">
+                                  <img src={p.image} alt={p.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
+                                </div>
+                                <div className="flex-1">
+                                  <h4 className="text-[11px] font-bold uppercase tracking-widest leading-none mb-1 group-hover:text-brand-rose transition-colors">{p.name}</h4>
+                                  <p className="text-[9px] opacity-40 uppercase tracking-widest font-bold">{p.price}</p>
+                                </div>
+                                <ChevronRight className="w-3 h-3 self-center opacity-20 group-hover:opacity-100 transition-opacity" />
+                              </Link>
+                            ))}
+                            <Link 
+                              to="/shop" 
+                              className="block text-center pt-2 text-[9px] font-bold uppercase tracking-widest text-brand-mocha/40 hover:text-brand-mocha transition-colors border-t border-brand-mocha/5"
+                            >
+                              View All Results
+                            </Link>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+              <button 
+                className="hover:text-brand-rose transition-colors"
+                onClick={() => setSearchOpen(!searchOpen)}
+              >
+                {searchOpen ? <X className="w-5 h-5" /> : <Search className="w-5 h-5" />}
+              </button>
+            </div>
             <button className="relative hover:text-brand-rose transition-colors text-[11px] font-bold uppercase tracking-widest flex items-center gap-2">
               <ShoppingBag className="w-5 h-5" />
               <span className="hidden lg:inline opacity-40 text-[9px]">(0)</span>
